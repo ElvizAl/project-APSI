@@ -30,8 +30,13 @@ export function VerifyEmail() {
   const [isLoading, setIsLoading] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
   const [countdown, setCountdown] = useState(60)
-  // email is read-only in this component; read it directly from sessionStorage to avoid an unused setter warning
-  const email = sessionStorage.getItem("verify_email") ?? ''
+  // Read email from sessionStorage only on the client using a safe lazy initializer.
+  // The initializer runs during render but we guard with typeof window to avoid SSR errors.
+  const [email] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('verify_email') ?? ''
+      : ''
+  )
 
   // Derive canResend from countdown instead of calling setState inside an effect
   const canResend = countdown <= 0
