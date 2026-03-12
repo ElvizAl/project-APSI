@@ -47,7 +47,7 @@ export function SignIn() {
       },
       onSuccess: (ctx) => {
         toast.success("Berhasil Login")
-        if (ctx.data?.user?.role === "ADMIN") {
+        if (ctx.data?.user?.role === "admin") {
           router.push("/dashboard")
           return
         }

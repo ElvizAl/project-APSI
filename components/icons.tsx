@@ -9,7 +9,7 @@ export const Icons = {
 
 export function AppLogoIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg {...props} width="51" height="40" viewBox="0 0 51 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} width="40" height="40" viewBox="0 0 51 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12.446 0L22.7801 8.82887C23.3936 9.35302 23.7473 10.1222 23.7473 10.9323V17.5862L13.4131 8.75734C12.7996 8.23319 12.446 7.464 12.446 6.65386V0Z" fill="#7B19D8"></path>
       <path d="M12.446 40L22.7801 31.1711C23.3936 30.647 23.7473 29.8778 23.7473 29.0677V22.4138L13.4131 31.2427C12.7996 31.7668 12.446 32.536 12.446 33.3461V40Z" fill="#7B19D8"></path>
       <path d="M0.117188 9.31034L10.3108 17.9705C10.805 18.3904 11.4308 18.6207 12.0775 18.6207H20.2982L10.1297 9.96253C9.63514 9.54141 9.00837 9.31034 8.36065 9.31034H0.117188Z" fill="#7B19D8"></path>

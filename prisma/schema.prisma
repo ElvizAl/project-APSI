@@ -14,8 +14,8 @@ datasource db {
 }
 
 enum Role {
-  USER
-  ADMIN
+  user
+  admin
 }
 
 model User {
@@ -26,12 +26,13 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  role          Role      @default(USER)
+  role          Role      @default(user)
   banned        Boolean?  @default(false)
   banReason     String?
   banExpires    DateTime?
   sessions      Session[]
   accounts      Account[]
+  profile Profile?
 
   @@map("user")
 }
@@ -66,7 +67,6 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@map("account")
 }
 
@@ -81,3 +81,16 @@ model Verification {
   @@map("verification")
 }
 
+model Profile {
+  id       String @id @default(cuid())
+  fullName String
+  phone    String
+  address  String
+  zipcode  String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}

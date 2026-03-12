@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from "nextjs-toploader";
+import { PageLoader } from "@/components/ui/page-loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +31,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NextTopLoader
+          color="hsl(var(--primary))"
+          height={3}
+          showSpinner={false}
+          speed={200}
+          easing="ease"
+          shadow={false}
+        />
+        <PageLoader />
         <TooltipProvider>
-        {children}
+          {children}
         </TooltipProvider>
         <Toaster richColors />
       </body>

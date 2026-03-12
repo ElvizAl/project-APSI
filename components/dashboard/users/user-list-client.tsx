@@ -106,8 +106,8 @@ export function UserListClient({ initialUsers, currentUserId, totalPages, curren
   };
 
   const handleToggleRole = async (user: User) => {
-    const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
-    const betterAuthRole = newRole.toLowerCase() as "user" | "admin";
+    const newRole = user.role === "admin" ? "user" : "admin";
+    const betterAuthRole = newRole as "user" | "admin";
     if (!confirm(`Apakah Anda yakin ingin mengubah peran pengguna ini menjadi ${newRole}?`)) return;
 
     setIsRoleUpdating(user.id);
@@ -163,7 +163,7 @@ export function UserListClient({ initialUsers, currentUserId, totalPages, curren
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>
+                    <Badge variant={user.role === "admin" ? "default" : "secondary"}>
                       {user.role}
                     </Badge>
                   </TableCell>
@@ -190,7 +190,7 @@ export function UserListClient({ initialUsers, currentUserId, totalPages, curren
                         size="icon"
                         onClick={() => handleToggleRole(user)}
                         disabled={isRoleUpdating === user.id || user.id === currentUserId}
-                        title={`Ubah ke ${user.role === 'ADMIN' ? 'USER' : 'ADMIN'}`}
+                        title={`Ubah ke ${user.role === 'admin' ? 'user' : 'admin'}`}
                       >
                         <UserCog className="h-4 w-4" />
                       </Button>

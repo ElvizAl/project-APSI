@@ -20,7 +20,7 @@ export default async function DashboardLayout({
     redirect("/auth/sign-in");
   }
 
-  if (session.user.role !== "ADMIN") {
+  if (session.user.role !== "admin") {
     redirect("/profile");
   }
 

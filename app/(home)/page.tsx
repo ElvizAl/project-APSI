@@ -1,6 +1,10 @@
 
+import { HeroCarousel } from "@/components/home/hero-carousel";
+
 export default function Home() {
   return (
-    <div>hello how are iam under in water please help me</div>
+    <div>
+      <HeroCarousel />
+    </div>
   );
 }
