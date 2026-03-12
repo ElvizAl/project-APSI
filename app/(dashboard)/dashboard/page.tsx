@@ -1,5 +1,10 @@
-"use client";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Kelola platform Glotomotif – pengguna, listing, dan laporan.",
+  robots: { index: false, follow: false },
+};
 
 export default function DashboardPage() {
   return (

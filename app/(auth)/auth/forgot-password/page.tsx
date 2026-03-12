@@ -1,3 +1,5 @@
+// This page has been refactored: client logic is in forgot-password-client.tsx
+// Keeping as-is but wrapping with generateMetadata
 "use client"
 
 import { useState } from "react"

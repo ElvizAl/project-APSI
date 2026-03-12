@@ -17,8 +17,61 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Glotomotif",
-  description: "Jual beli mobil bekas hanya diglotomotif",
+  metadataBase: new URL('https://www.glotomotif.my.id'),
+  title: {
+    default: 'Glotomotif – Jual Beli Mobil Bekas Terpercaya',
+    template: '%s | Glotomotif',
+  },
+  description:
+    'Glotomotif adalah platform jual beli mobil bekas terpercaya di Indonesia. Lebih dari 500 unit tersedia, lulus inspeksi 150 titik, garansi mesin & transmisi 1 tahun.',
+  keywords: [
+    'jual beli mobil bekas',
+    'mobil bekas terpercaya',
+    'beli mobil bekas',
+    'jual mobil',
+    'tukar tambah mobil',
+    'glotomotif',
+    'marketplace mobil',
+  ],
+  authors: [{ name: 'Glotomotif' }],
+  creator: 'Glotomotif',
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://www.glotomotif.my.id',
+    siteName: 'Glotomotif',
+    title: 'Glotomotif – Jual Beli Mobil Bekas Terpercaya',
+    description:
+      'Platform jual beli mobil bekas terpercaya di Indonesia. Lulus inspeksi 150 titik, garansi 1 tahun.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Glotomotif – Jual Beli Mobil Bekas',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Glotomotif – Jual Beli Mobil Bekas Terpercaya',
+    description:
+      'Platform jual beli mobil bekas terpercaya di Indonesia. Lulus inspeksi 150 titik, garansi 1 tahun.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://www.glotomotif.my.id',
+  },
 };
 
 export default function RootLayout({

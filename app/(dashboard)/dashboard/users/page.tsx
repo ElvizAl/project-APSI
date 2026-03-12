@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { UserListClient } from "@/components/dashboard/users/user-list-client";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+
+export const metadata: Metadata = {
+  title: "Kelola Pengguna",
+  description: "Manajemen pengguna platform Glotomotif.",
+  robots: { index: false, follow: false },
+};
+
 import { Prisma } from "@/lib/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
