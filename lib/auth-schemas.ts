@@ -23,6 +23,7 @@ export const forgetPasswordSchema = z.object({
 })
 
 export const resetPasswordSchema = z.object({
+  otp: z.string().length(6, 'Kode OTP harus 6 karakter'),
   password: z.string()
     .min(8, 'Password harus terdiri dari minimal 8 karakter')
     .regex(/[A-Z]/, 'Password harus mengandung setidaknya satu huruf kapital')

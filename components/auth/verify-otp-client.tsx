@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { verifyEmailSchema, type VerifyEmailInput } from '@/lib/auth-schemas'
+import { useState } from "react"
+import Link from "next/link"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { verifyEmailSchema, type VerifyEmailInput } from "@/lib/auth-schemas"
 import {
   Form,
   FormControl,
@@ -12,33 +12,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { AppLogoIcon } from '@/components/icons'
+} from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
+import { AppLogoIcon } from "@/components/icons"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { authClient } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { useEffect } from 'react'
+import { authClient } from "@/lib/auth-client"
+import { useRouter, useSearchParams } from "next/navigation"
+import { toast } from "sonner"
+import { useEffect, useState as useReactState } from "react"
 
-export function VerifyEmail() {
+export default function VerifyOtpClient() {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [resendLoading, setResendLoading] = useState(false)
-  const [countdown, setCountdown] = useState(60)
-  // Read email from sessionStorage only on the client using a safe lazy initializer.
-  // The initializer runs during render but we guard with typeof window to avoid SSR errors.
-  const [email] = useState(() =>
-    typeof window !== 'undefined'
-      ? sessionStorage.getItem('verify_email') ?? ''
-      : ''
-  )
+  const searchParams = useSearchParams()
+  const emailParam = searchParams.get("email") || ""
 
-  // Derive canResend from countdown instead of calling setState inside an effect
+  const [resendLoading, setResendLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [countdown, setCountdown] = useReactState(60)
+
   const canResend = countdown <= 0
 
   useEffect(() => {
@@ -52,53 +47,51 @@ export function VerifyEmail() {
   const form = useForm<VerifyEmailInput>({
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: {
-      code: '',
+      code: "",
     },
   })
 
   async function onSubmit(data: VerifyEmailInput) {
+    if (!emailParam) {
+      toast.error("Email tidak ditemukan. Kembali ke halaman lupa password.")
+      return
+    }
     setIsLoading(true)
-    await authClient.emailOtp.verifyEmail({
-        email: email, // Use state email
-        otp: data.code,
-    }, {
-        onSuccess: () => {
-            toast.success("Email verified successfully!")
-            sessionStorage.removeItem("verify_email")
-            router.push("/auth/sign-in")
-        },
-        onError: (ctx) => {
-             form.setError('root', {
-                message: ctx.error.message,
-             })
-             toast.error(ctx.error.message)
-             setIsLoading(false)
-        }
+    // Validate the OTP before moving to next step
+    const { data: result, error } = await authClient.emailOtp.checkVerificationOtp({
+      email: emailParam,
+      otp: data.code,
+      type: "forget-password",
     })
+
+    if (error) {
+      toast.error(error.message || "Kode OTP tidak valid")
+      form.setError("root", { message: error.message || "Kode OTP tidak valid" })
+      setIsLoading(false)
+      return
+    }
+
+    // OTP is valid → go to the reset password page
+    router.push(`/auth/reset-password?email=${encodeURIComponent(emailParam)}&otp=${encodeURIComponent(data.code)}`)
   }
 
-  async function handleResendCode() {
-    if (!email) {
-        toast.error("Tidak ada Email untuk mengirim ulang kode.")
-        return
+  async function handleResend() {
+    if (!emailParam) {
+      toast.error("Tidak ada email untuk mengirim ulang kode.")
+      return
     }
-  setResendLoading(true)
-  setCountdown(60)
-
-    await authClient.emailOtp.sendVerificationOtp({
-        email,
-        type: "email-verification"
-    }, {
-        onSuccess: () => {
-             toast.success("Kode telah dikirim ulang! Periksa email Anda.")
-             setResendLoading(false)
-        },
-    onError: (ctx) => {
-      toast.error(ctx.error.message)
-      // make sure countdown becomes 0 so `canResend` becomes true
-      setCountdown(0)
-      setResendLoading(false)
-    }
+    setResendLoading(true)
+    setCountdown(60)
+    await authClient.emailOtp.requestPasswordReset({ email: emailParam }, {
+      onSuccess: () => {
+        toast.success("Kode OTP telah dikirim ulang!")
+        setResendLoading(false)
+      },
+      onError: (ctx) => {
+        toast.error(ctx.error.message)
+        setCountdown(0)
+        setResendLoading(false)
+      }
     })
   }
 
@@ -123,7 +116,7 @@ export function VerifyEmail() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-2xl font-semibold tracking-tight">
-              &ldquo;Satu langkah lagi untuk bergabung komunitas otomotif terbesar.&rdquo;
+              &ldquo;Satu langkah lagi untuk memulihkan akses akun Anda.&rdquo;
             </p>
             <footer className="text-sm tracking-wide text-zinc-300">Tim Glotomotif</footer>
           </blockquote>
@@ -137,9 +130,10 @@ export function VerifyEmail() {
             <div className="flex justify-center lg:hidden">
               <AppLogoIcon className="h-10 fill-current text-zinc-900 dark:text-zinc-100 sm:h-12" />
             </div>
-            <h1 className="text-2xl font-semibold tracking-tight">Verifikasi Email</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Masukkan Kode OTP</h1>
             <p className="text-sm text-muted-foreground">
-              Kami telah mengirimkan kode verifikasi ke <br /><span className="font-medium text-foreground">{email}</span>
+              Kode OTP telah dikirimkan ke{" "}
+              <br /><span className="font-medium text-foreground">{emailParam || "email Anda"}</span>
             </p>
           </div>
 
@@ -165,12 +159,15 @@ export function VerifyEmail() {
                         </InputOTP>
                       </FormControl>
                       <FormMessage className="text-center" />
+                      {form.formState.errors.root && (
+                        <p className="text-center text-sm font-medium text-destructive">{form.formState.errors.root.message}</p>
+                      )}
                     </FormItem>
                   )}
                 />
 
                 <Button className="w-full mt-4" type="submit" disabled={isLoading}>
-                  {isLoading ? 'Memverifikasi...' : 'Verifikasi Email'}
+                  {isLoading ? "Memeriksa..." : "Verifikasi Kode"}
                 </Button>
               </form>
             </Form>
@@ -182,11 +179,11 @@ export function VerifyEmail() {
                 className="px-0 font-normal hover:text-primary"
                 onClick={(e) => {
                   e.preventDefault()
-                  handleResendCode()
+                  handleResend()
                 }}
                 disabled={!canResend || resendLoading}
               >
-                {resendLoading ? 'Mengirim ulang...' : canResend ? 'Kirim ulang kode' : `Kirim ulang dalam ${countdown}d`}
+                {resendLoading ? "Mengirim..." : canResend ? "Kirim Ulang" : `Kirim ulang dalam ${countdown}d`}
               </Button>
             </p>
           </div>
