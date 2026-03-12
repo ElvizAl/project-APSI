@@ -62,7 +62,7 @@ export function HomeNavbar() {
       isScrolled ? "bg-white shadow-sm" : "bg-white border-b border-zinc-100"
     )}>
       <div className="hidden bg-zinc-900 text-zinc-300 py-1.5 md:block">
-        <div className="max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between text-[11px] font-medium tracking-wide uppercase mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between text-[11px] font-medium tracking-wide uppercase mx-auto">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
               <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-green-500/20">
